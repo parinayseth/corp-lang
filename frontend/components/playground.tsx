@@ -32,9 +32,18 @@ const STORAGE_KEY = "corplang.source";
 
 export function Playground() {
   const [code, setCode] = useState<string>(EXAMPLES[0].code);
+  const [selectedExample, setSelectedExample] = useState<string>(
+    EXAMPLES[0].name,
+  );
   const [result, setResult] = useState<CompileResult | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [showPython, setShowPython] = useState(false);
+
+  // Show the example in the dropdown only while the editor still matches it.
+  const activeExample =
+    EXAMPLES.find((x) => x.name === selectedExample)?.code === code
+      ? selectedExample
+      : "";
 
   // restore last session's code
   useEffect(() => {
@@ -106,10 +115,13 @@ export function Playground() {
           <select
             aria-label="Load an example"
             className="ml-auto rounded-lg border border-border bg-card px-2.5 py-1.5 text-sm text-foreground outline-none transition-colors hover:bg-card-muted focus:ring-2 focus:ring-ring"
-            value=""
+            value={activeExample}
             onChange={(e) => {
               const ex = EXAMPLES.find((x) => x.name === e.target.value);
-              if (ex) setCode(ex.code);
+              if (ex) {
+                setCode(ex.code);
+                setSelectedExample(ex.name);
+              }
             }}
           >
             <option value="" disabled>
