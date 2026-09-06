@@ -1,6 +1,6 @@
-# Starts the FastAPI backend and the Next.js frontend together (Windows / PowerShell).
+# Starts the FastAPI backend and the Vite frontend together (Windows / PowerShell).
 # Backend  -> http://127.0.0.1:8000
-# Frontend -> http://localhost:3000
+# Frontend -> http://localhost:5173
 # Press Ctrl+C to stop the frontend; close the spawned window to stop the backend.
 
 $ErrorActionPreference = "Stop"
@@ -18,7 +18,7 @@ if (-not (Test-Path node_modules)) {
   Write-Host "Installing frontend dependencies..." -ForegroundColor Yellow
   npm install
 }
-if (-not (Test-Path .env.local)) {
-  Copy-Item .env.local.example .env.local
+if (-not (Test-Path .env)) {
+  Copy-Item .env.example .env
 }
 npm run dev

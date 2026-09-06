@@ -1,8 +1,6 @@
-"use client";
-
 import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 
+import { useTheme } from "@/lib/theme";
 import { Moon, Sun } from "./icons";
 
 export function ThemeToggle() {

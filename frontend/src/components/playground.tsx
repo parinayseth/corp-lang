@@ -1,30 +1,17 @@
-"use client";
+import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 
-import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
-
+import { ApiError, compileCode, type CompileResult } from "@/lib/api";
 import { EXAMPLES } from "@/lib/examples";
 import { CopyButton } from "./copy-button";
 import { Play, Spinner, Terminal } from "./icons";
 
-const CodeEditor = dynamic(
-  () => import("./code-editor").then((m) => m.CodeEditor),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[460px] animate-pulse rounded-xl border border-border bg-card-muted" />
-    ),
-  },
+const CodeEditor = lazy(() =>
+  import("./code-editor").then((m) => ({ default: m.CodeEditor })),
 );
 
-type CompileResult = {
-  ok: boolean;
-  output: string;
-  python: string;
-  error: string;
-  truncated?: boolean;
-  duration_ms?: number;
-};
+const EditorSkeleton = () => (
+  <div className="h-[460px] animate-pulse rounded-xl border border-border bg-card-muted" />
+);
 
 type Status = "idle" | "running" | "done" | "error";
 
@@ -66,38 +53,29 @@ export function Playground() {
   const run = useCallback(async () => {
     setStatus("running");
     try {
-      const res = await fetch("/api/compile", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ code }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
+      const data = await compileCode(code);
+      setResult(data);
+      setStatus(data.ok ? "done" : "error");
+    } catch (err) {
+      if (err instanceof ApiError) {
+        const payload = err.payload as { python?: string } | undefined;
         setResult({
           ok: false,
           output: "",
-          python: data?.python ?? "",
-          error:
-            typeof data?.detail === "string"
-              ? data.detail
-              : `Request failed (${res.status}).`,
+          python: payload?.python ?? "",
+          error: err.message,
         });
-        setStatus("error");
-        return;
+      } else {
+        setResult({
+          ok: false,
+          output: "",
+          python: "",
+          error:
+            "Could not reach the CorpLang API. Is the FastAPI backend running, " +
+            "and is VITE_API_URL set correctly?\n\n" +
+            (err instanceof Error ? err.message : String(err)),
+        });
       }
-
-      setResult(data as CompileResult);
-      setStatus(data.ok ? "done" : "error");
-    } catch (err) {
-      setResult({
-        ok: false,
-        output: "",
-        python: "",
-        error:
-          "Could not reach the CorpLang API. Is the FastAPI backend running on port 8000?\n\n" +
-          (err instanceof Error ? err.message : String(err)),
-      });
       setStatus("error");
     }
   }, [code]);
@@ -135,7 +113,9 @@ export function Playground() {
           </select>
         </div>
 
-        <CodeEditor value={code} onChange={setCode} onRun={run} />
+        <Suspense fallback={<EditorSkeleton />}>
+          <CodeEditor value={code} onChange={setCode} onRun={run} />
+        </Suspense>
 
         <div className="flex flex-wrap items-center gap-3">
           <button

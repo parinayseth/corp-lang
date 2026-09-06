@@ -20,9 +20,18 @@ from runner import DEFAULT_TIMEOUT, execute
 
 MAX_SOURCE_BYTES = 50_000
 
-# Comma-separated list of allowed browser origins; "*" by default for local dev.
-_origins = os.getenv("CORS_ORIGINS", "*")
-ALLOW_ORIGINS = ["*"] if _origins.strip() == "*" else [o.strip() for o in _origins.split(",") if o.strip()]
+# Comma-separated browser origins allowed to call the API. The default covers a
+# local Vite dev server; set it explicitly in production, e.g.
+#   CORS_ORIGINS=https://your-frontend.vercel.app
+_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
+ALLOW_ORIGINS = (
+    ["*"]
+    if _origins.strip() == "*"
+    else [o.strip() for o in _origins.split(",") if o.strip()]
+)
+# Optional regex for dynamic origins such as Vercel preview URLs, e.g.
+#   CORS_ORIGINS_REGEX=https://.*\.vercel\.app
+_origins_regex = os.getenv("CORS_ORIGINS_REGEX") or None
 
 app = FastAPI(
     title="CorpLang API",
@@ -32,6 +41,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOW_ORIGINS,
+    allow_origin_regex=_origins_regex,
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],

@@ -1,6 +1,13 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
-import { ArrowRight, BookOpen, Play, Sparkles, Terminal } from "@/components/icons";
+import {
+  ArrowRight,
+  BookOpen,
+  Play,
+  Sparkles,
+  Terminal,
+} from "@/components/icons";
+import { useDocumentTitle } from "@/lib/use-document-title";
 
 const SNIPPET = `DELIVERABLE greet(name)
     PING "Hi " + name + ", circling back!"
@@ -40,7 +47,9 @@ const FEATURES = [
   },
 ];
 
-export default function HomePage() {
+export function Home() {
+  useDocumentTitle();
+
   return (
     <div>
       {/* Hero */}
@@ -59,24 +68,39 @@ export default function HomePage() {
 
             <p className="mt-4 max-w-xl text-lg text-muted">
               CorpLang transpiles buzzword-laden syntax into clean Python and
-              runs it. <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">TOUCH BASE</code>{" "}
-              for <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">if</code>,{" "}
-              <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">CIRCLE BACK</code>{" "}
-              for <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">while</code>,{" "}
-              and yes, <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">THANKS</code>{" "}
+              runs it.{" "}
+              <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">
+                TOUCH BASE
+              </code>{" "}
+              for{" "}
+              <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">
+                if
+              </code>
+              ,{" "}
+              <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">
+                CIRCLE BACK
+              </code>{" "}
+              for{" "}
+              <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">
+                while
+              </code>
+              , and yes,{" "}
+              <code className="rounded bg-card-muted px-1.5 py-0.5 font-mono text-sm">
+                THANKS
+              </code>{" "}
               to close a block.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
-                href="/compiler"
+                to="/compiler"
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition hover:brightness-110"
               >
                 Open the compiler
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/docs"
+                to="/docs"
                 className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:bg-card-muted"
               >
                 <BookOpen className="h-4 w-4" />
@@ -123,9 +147,7 @@ export default function HomePage() {
       {/* Mapping table */}
       <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-          <h2 className="text-xl font-semibold tracking-tight">
-            How it maps
-          </h2>
+          <h2 className="text-xl font-semibold tracking-tight">How it maps</h2>
           <p className="mt-1 text-sm text-muted">
             Each line is rewritten to one line of Python by a small set of regex
             rules.
@@ -145,7 +167,7 @@ export default function HomePage() {
           </div>
 
           <Link
-            href="/docs"
+            to="/docs"
             className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
           >
             Full language reference

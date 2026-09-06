@@ -1,14 +1,8 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 import { ArrowRight } from "@/components/icons";
 import { KEYWORD_ROWS } from "@/lib/keywords";
-
-export const metadata: Metadata = {
-  title: "Docs",
-  description:
-    "CorpLang language reference: keywords, blocks, values, and the backlog of things we will never fix.",
-};
+import { useDocumentTitle } from "@/lib/use-document-title";
 
 const EXAMPLE = `-- CorpLang: a quick walkthrough
 
@@ -29,7 +23,9 @@ DAMAGE CONTROL
 RETRO
     PING "Shipped: " + str(shipped)`;
 
-export default function DocsPage() {
+export function Docs() {
+  useDocumentTitle("Docs");
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <div className="animate-fade-up">
@@ -48,12 +44,12 @@ export default function DocsPage() {
           <li>
             <span className="font-medium text-foreground">In this app:</span>{" "}
             open the{" "}
-            <Link href="/compiler" className="text-primary hover:underline">
+            <Link to="/compiler" className="text-primary hover:underline">
               Compiler
             </Link>
-            , type CorpLang, press <em>Run output</em>. The Next.js server relays
-            your program to the FastAPI service, which transpiles and executes it
-            in a throwaway process.
+            , type CorpLang, press <em>Run output</em>. The app sends your
+            program straight to the FastAPI service, which transpiles and
+            executes it in a throwaway process.
           </li>
           <li>
             <span className="font-medium text-foreground">Command line:</span>{" "}
@@ -182,7 +178,7 @@ export default function DocsPage() {
       <div className="mt-12 rounded-xl border border-border bg-card p-5">
         <p className="text-sm text-muted">Ready to action this?</p>
         <Link
-          href="/compiler"
+          to="/compiler"
           className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
         >
           Open the compiler

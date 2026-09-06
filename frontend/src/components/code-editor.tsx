@@ -1,11 +1,9 @@
-"use client";
-
 import { useEffect, useMemo, useRef, useState } from "react";
 import CodeMirror from "@uiw/react-codemirror";
 import { EditorView, keymap } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
-import { useTheme } from "next-themes";
 
+import { useTheme } from "@/lib/theme";
 import { corplang } from "@/lib/corplang-lang";
 
 type Props = {

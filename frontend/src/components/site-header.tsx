@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 
 import { Sparkles } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
@@ -13,13 +10,13 @@ const NAV = [
 ];
 
 export function SiteHeader() {
-  const pathname = usePathname();
+  const pathname = useLocation().pathname;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 sm:gap-6 sm:px-6">
         <Link
-          href="/"
+          to="/"
           className="flex shrink-0 items-center gap-2 font-semibold tracking-tight"
         >
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -37,7 +34,7 @@ export function SiteHeader() {
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                to={item.href}
                 className={`rounded-lg px-2.5 py-1.5 font-medium transition-colors sm:px-3 ${
                   active
                     ? "bg-card-muted text-foreground"

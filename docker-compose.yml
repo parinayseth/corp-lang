@@ -1,20 +1,19 @@
-# CorpLang — full stack.
-#   docker compose up --build     then open http://localhost:3000
+# CorpLang — full stack for local use.
+#   docker compose up --build      then open http://localhost:8080
 #
-# The browser only ever talks to the frontend; the frontend relays /api/*
-# to the backend over the internal network (BACKEND_URL).
+# The browser calls the backend directly (VITE_API_URL), so the frontend build
+# bakes in http://localhost:8000 and the backend allows the frontend's origin.
+# This mirrors the production split (frontend on Vercel, backend on Render/etc.).
 
 services:
   backend:
     build: ./backend
     image: corplang-backend
     environment:
-      CORS_ORIGINS: "*"
-    expose:
-      - "8000"
-    # Uncomment to reach the API / its /docs directly from the host:
-    # ports:
-    #   - "8000:8000"
+      CORS_ORIGINS: "http://localhost:8080"
+      PORT: "8000"
+    ports:
+      - "8000:8000"
     healthcheck:
       test:
         ["CMD", "python", "-c",
@@ -26,12 +25,13 @@ services:
     restart: unless-stopped
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: "http://localhost:8000"
     image: corplang-frontend
-    environment:
-      BACKEND_URL: http://backend:8000
     ports:
-      - "3000:3000"
+      - "8080:80"
     depends_on:
       backend:
         condition: service_healthy
