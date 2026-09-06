@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import { healthCheck } from "@/lib/api";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Home } from "@/pages/Home";
@@ -7,6 +9,12 @@ import { Compiler } from "@/pages/Compiler";
 import { Docs } from "@/pages/Docs";
 
 export function App() {
+  // Free-tier hosts (Render / Railway) idle the backend after inactivity. Poke
+  // /health once on load so it cold-starts while the user reads the page.
+  useEffect(() => {
+    healthCheck().catch(() => {});
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
