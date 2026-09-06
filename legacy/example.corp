@@ -1,0 +1,35 @@
+-- CorpLang demo: variables, arithmetic, loops, conditionals, functions
+
+BANDWIDTH x ALIGN 5
+BANDWIDTH y ALIGN 10
+BANDWIDTH total ALIGN x + y
+PING total
+
+CIRCLE BACK x < 8
+    x ALIGN x + 1
+    PING x
+THANKS
+
+TOUCH BASE total > 10
+    PING "big deliverable"
+OTHERWISE IF total == 10
+    PING "right on target"
+OTHERWISE
+    PING "low hanging fruit"
+THANKS
+
+DELIVERABLE add(a, b)
+    CIRCLE BACK TO OFFICE a + b
+THANKS
+
+BANDWIDTH result ALIGN add(3, 4)
+PING result
+
+FOR EACH item IN range(3)
+    PING item
+THANKS
+
+BANDWIDTH deployed ALIGN LOCKED IN
+TOUCH BASE deployed
+    PING "shipped it"
+THANKS

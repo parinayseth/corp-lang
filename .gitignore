@@ -1,0 +1,19 @@
+# Python
+**/__pycache__/
+*.pyc
+backend/.venv/
+backend/.env
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/.env
+*.tsbuildinfo
+
+# Editors / OS / tooling
+.claude/
+.DS_Store
+.vscode/
+.idea/
